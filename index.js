@@ -23,18 +23,18 @@ app.use(express.static(join(__dirname, 'public')))
 
 
 
-app.get("/movies", (req, res) => {
+// app.get("/movies", (req, res) => {
 
-	http.get(`https://api.themoviedb.org/3/movie/550?api_key=${process.env.api_key}`, (res) => {
-		console.log(`statusCode: ${res.statusCode}`);
-		res.on('data', (d) => {
+// 	http.get(`https://api.themoviedb.org/3/movie/550?api_key=${process.env.api_key}`, (res) => {
+// 		console.log(`statusCode: ${res.statusCode}`);
+// 		res.on('data', (d) => {
 			
-			process.stdout.write(d);
-		});
-	}).on('error', (e) => {
-		console.error(e);
-	});
-})
+// 			process.stdout.write(d);
+// 		});
+// 	}).on('error', (e) => {
+// 		console.error(e);
+// 	});
+// })
 
 
 app.use('*', (req, res) => {

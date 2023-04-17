@@ -13,12 +13,12 @@ let schema = new mongoose.Schema(
             type:String,
             required:true
         },
-        movie:{
+        movieId:{
             type:String,
             required:true
         },
         rating:{
-            type:Int,
+            type:Number,
             default: 0,
         }
     }
