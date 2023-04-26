@@ -24,7 +24,20 @@ router.get('/:id',async({params:{id}},res)=>
     {
         console.log(id)
         let movie = await RatedMovie.findById(id).exec()
-        res.json(movie);
+        let reviews = await Review.find({movieId:id}).exec()
+        let ratings = await Rating.find({movieId:id}).exec()
+        let avgScore = 0;
+        let sum = 0;
+        ratings.forEach(element => {
+            sum += element.rating;
+        });
+        avgScore = sum/ratings.length
+        let res_data = {
+            movie: movie,
+            rating: avgScore,
+            reviews: reviews,
+        }
+        res.json(res_data);
         console.log("Done");
     }catch{
         res.status(400).json("oops something went wrong");
@@ -41,7 +54,7 @@ router.get('/:id',async({params:{id}},res)=>
     "rating": 4.5
     }
 */
-router.post('/review',async(req,res)=>
+router.post('/rate',async(req,res)=>
 {
     console.log(req.body)
     let rating = new Rating(req.body)
@@ -52,6 +65,21 @@ router.post('/review',async(req,res)=>
         console.log("Done")
     }catch{
         res.status(400).json("oops something went wrong");
+    }
+})
+
+router.post('/review',async(req,res)=>
+{
+    console.log(req.body)
+    let review = new Review(req.body)
+    try
+    {
+        await review.save();
+        res.json(review)
+        console.log("Done")
+    }catch(err){
+        
+        res.status(400).json("oops something went wrong\n"+err);
     }
 })
 

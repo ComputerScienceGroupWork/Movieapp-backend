@@ -1,44 +1,52 @@
 let mongoose = require('mongoose')
 
 let schema = new mongoose.Schema({
-	firstName:{
-		type:String,
-		required:true,
-		pattern:/^\w+$/,
-	},
-
-	lastName:{
+	firstName: {
 		type: String,
 		required: true,
-		pattern:/^\w+$/
+		pattern: /^\w+$/,
 	},
 
-	username:{
-		type:String,
-		required:true,
-		pattern:/[\w\d]+/
+	lastName: {
+		type: String,
+		required: true,
+		pattern: /^\w+$/
 	},
 
-	password:{
-		type:String,
-		required:true
+	username: {
+		type: String,
+		required: true,
+		pattern: /[\w\d]+/
+	},
+	email: {
+		type: String,
+		required: [true, 'Email is required'],
+		// validate: {
+		// 	validator: isEmail,
+		// 	message: props => `${props.value} is not a valid email`
+		// }
+	},
+	password: {
+		type: String,
+		required: [true, 'Password is required'],
+		validate: {
+			validator: function (value) {
+				return value.length >= 8
+			},
+			message: () => 'Password must be at least eight characters long'
+		}
 	},
 
-	role:{
-		type:String,
-		enum:['match-secretary','match-commissioner'],
-		required:true
-	},
-	createdAt:{
-		type:Date,
-		required:true,
+	createdAt: {
+		type: Date,
+		required: true,
 		default: new Date()
 	}
 });
 
 
 
-let User = mongoose.model('User',schema)
+let User = mongoose.model('User', schema)
 
 
 module.exports = {

@@ -9,11 +9,11 @@ const { default: mongoose } = require("mongoose");
 
 let schema = new mongoose.Schema(
     {
-        userId:{
+        user:{
             type:String,
             required:true
         },
-        movie:
+        movieId:
         {
             type:String,
             required:true
