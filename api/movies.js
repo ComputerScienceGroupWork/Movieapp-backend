@@ -18,31 +18,47 @@ router.post('/', async(req,res)=>
     }
 })
 //gets a movie by id
-router.get('/:id',async({params:{id}},res)=>
-{
-    try
-    {
-        console.log(id)
-        let movie = await RatedMovie.findById(id).exec()
-        let reviews = await Review.find({movieId:id}).exec()
-        let ratings = await Rating.find({movieId:id}).exec()
-        let avgScore = 0;
-        let sum = 0;
-        ratings.forEach(element => {
-            sum += element.rating;
-        });
-        avgScore = sum/ratings.length
-        let res_data = {
-            movie: movie,
-            rating: avgScore,
-            reviews: reviews,
+router.get('/:id', async ({params: {id}}, res) => {
+    try {
+        console.log(id);
+
+        // Execute all queries in parallel
+        const [movie, reviews, ratings] = await Promise.all([
+            RatedMovie.findById(id).exec(),
+            Review.find({movieId: id}).exec(),
+            Rating.aggregate([
+                {$match: {movieId: id}},
+                {$group: {_id: null, avgRating: {$avg: "$rating"}}},
+            ]).exec(),
+        ]);
+
+        // Extract the average rating from the aggregation result
+        const avgScore = ratings.length > 0 ? ratings[0].avgRating : 0;
+
+        // Send the response as a streaming response
+        res.setHeader('Content-Type', 'application/json');
+        res.write('{"movie":');
+        res.write(JSON.stringify(movie));
+        res.write(',"rating":');
+        res.write(JSON.stringify(avgScore));
+        res.write(',"reviews":[');
+        let isFirstReview = true;
+        for await (const review of reviews) {
+            if (!isFirstReview) {
+                res.write(',');
+            }
+            res.write(JSON.stringify(review));
+            isFirstReview = false;
         }
-        res.json(res_data);
+        res.write(']}');
+        res.end();
+        
         console.log("Done");
-    }catch{
+    } catch {
         res.status(400).json("oops something went wrong");
     }
-})
+});
+
 
 
 //Add a rating to the movie
@@ -56,6 +72,10 @@ router.get('/:id',async({params:{id}},res)=>
 */
 router.post('/rate',async(req,res)=>
 {
+    if(isAuthed(req,res))
+    {
+        res.status().json({"message":"user not authenticated"})
+    }
     console.log(req.body)
     let rating = new Rating(req.body)
     try
@@ -70,11 +90,16 @@ router.post('/rate',async(req,res)=>
 
 router.post('/review',async(req,res)=>
 {
-    if(!isAuthed(req,res))
+    if(isAuthed(req,res))
     {
-        res.status(403).json({"message":"not authenticated"})
-        
-    }else{
+        res.status().json({"message":"user not authenticated"})
+    }
+    console.log(req.body)
+    let review = new Review(req.body)
+
+
+
+
 
         console.log(req.body)
         let review = new Review(req.body)
@@ -87,7 +112,7 @@ router.post('/review',async(req,res)=>
         
         res.status(400).json("oops something went wrong\n"+err);
     }
-}
+
 })
 
 // Gets a rated movie along with its ratings and reviews
