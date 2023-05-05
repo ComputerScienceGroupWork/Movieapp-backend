@@ -56,6 +56,10 @@ router.get('/:id',async({params:{id}},res)=>
 */
 router.post('/rate',async(req,res)=>
 {
+    if(isAuthed(req,res))
+    {
+        res.status().json({"message":"user not authenticated"})
+    }
     console.log(req.body)
     let rating = new Rating(req.body)
     try
@@ -70,6 +74,10 @@ router.post('/rate',async(req,res)=>
 
 router.post('/review',async(req,res)=>
 {
+    if(isAuthed(req,res))
+    {
+        res.status().json({"message":"user not authenticated"})
+    }
     console.log(req.body)
     let review = new Review(req.body)
     try
