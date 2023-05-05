@@ -96,8 +96,15 @@ router.post('/review',async(req,res)=>
     }
     console.log(req.body)
     let review = new Review(req.body)
-    try
-    {
+
+
+
+
+
+        console.log(req.body)
+        let review = new Review(req.body)
+        try
+        {
         await review.save();
         res.json(review)
         console.log("Done")
@@ -105,8 +112,12 @@ router.post('/review',async(req,res)=>
         
         res.status(400).json("oops something went wrong\n"+err);
     }
+
 })
 
 // Gets a rated movie along with its ratings and reviews
-
+function isAuthed(res,req)
+{
+    return true
+}
 module.exports=router
