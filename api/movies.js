@@ -72,7 +72,7 @@ router.get('/:id', async ({params: {id}}, res) => {
 */
 router.post('/rate',async(req,res)=>
 {
-    if(isAuthed(req,res))
+    if(!isAuthed(req,res))
     {
         res.status().json({"message":"user not authenticated"})
     }
@@ -90,7 +90,7 @@ router.post('/rate',async(req,res)=>
 
 router.post('/review',async(req,res)=>
 {
-    if(isAuthed(req,res))
+    if(!isAuthed(req,res))
     {
         res.status().json({"message":"user not authenticated"})
     }
