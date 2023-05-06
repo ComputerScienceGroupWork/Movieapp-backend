@@ -29,8 +29,12 @@ app.get('/accessResource', (req, res)=>{
         res.status(200).json({success:false, message: "Error! Token was not provided."});
     }
     //Decoding the token
+    try{
     const decodedToken = jwt.verify(token,process.env.AUTH_SECRET );
     res.status(200).json({success:true, data: {user:decodedToken.user, email:decodedToken.email}});   
+    }catch{
+        res.status(404).json({"message":"Not authenticated"})
+    }
 })
 app.use(express.static(join(__dirname, 'public')))
 
