@@ -17,7 +17,9 @@ mongoose.connection.on('connected', _ => {
 })
 
 app.use(express.json({ extended: true }))
-
+app.use(cors({
+    origin: 'http://localhost:8000'
+  }));
 app.use('/api', require('./api'))
 
 // THis is a test of accessing components only when logged in
