@@ -7,8 +7,8 @@ let http = require('https')
 let jwt = require('jsonwebtoken')
 let app = express()
 
-if (process.env.DEV_ENV) // Make configuration in the env file
-	app.use(cors())
+ // Make configuration in the env file
+app.use(cors())
 
 mongoose.connect(process.env.DB_URI)
 
