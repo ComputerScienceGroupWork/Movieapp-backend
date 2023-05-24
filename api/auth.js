@@ -27,7 +27,7 @@ router.post('/login', async(req, res) => {
 			alg: 'HS256'
 		}, process.env.AUTH_SECRET)
 		res.set({ 'access-token': token, 'Access-Control-Expose-Headers': 'access-token' })
-		return res.json({"message":"user authenticated"})
+		return res.json({"message":"user authenticated", "user":user})
 		//res.end()
 	})
 
@@ -63,6 +63,7 @@ router.post("/sign-up", async (req, res) => {
 			});
 
 			// Save user to database
+			console.log("Creating User")
 			user.save().then(() => {
 				return res.json({ message: "User created successfully", user });
 			});
