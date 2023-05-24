@@ -27,8 +27,8 @@ router.post('/login', async(req, res) => {
 			alg: 'HS256'
 		}, process.env.AUTH_SECRET)
 		res.set({ 'access-token': token, 'Access-Control-Expose-Headers': 'access-token' })
-		res.json({"message":"user authenticated"})
-		res.end()
+		return res.json({"message":"user authenticated"})
+		//res.end()
 	})
 
 })

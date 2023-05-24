@@ -17,10 +17,10 @@ router.post('/', async (req, res) => {
     user.watchlist.push({movieId:movieId, movieName:movieName});
     await user.save();
 
-    res.json({ message: 'Movie added to watchlist' });
+    return res.json({ message: 'Movie added to watchlist' });
   } catch (err) {
 
-    res.status(500).json({ message: 'oops something went wrong' , error: err.message});
+    return res.status(500).json({ message: 'oops something went wrong' , error: err.message});
   }
 });
 
@@ -39,9 +39,9 @@ router.get('/:userId', async (req, res) => {
     // Retrieve the watchlist movies for the user
     const watchlist = user.watchlist;
 
-    res.json({ watchlist });
+    return  res.json({ watchlist });
   } catch (err) {
-    res.status(500).json({ message: 'oops something went wrong' });
+    return  res.status(500).json({ message: 'oops something went wrong' });
   }
 });
 
@@ -64,7 +64,7 @@ router.delete('/:userId/:movieId', async (req, res) => {
 
     res.json({ message: 'Movie removed from watchlist successfully' });
   } catch (err) {
-    res.status(500).json({ message: 'oops something went wrong' });
+    return  res.status(500).json({ message: 'oops something went wrong' });
   }
 });
 
