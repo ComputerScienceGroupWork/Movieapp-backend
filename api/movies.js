@@ -1,7 +1,9 @@
 let router = require('express').Router()
+require('dotenv').config()
 let { RatedMovie } = require('../models/ratedMovies')
 let { Rating } = require('../models/rating')
 let { Review } = require('../models/review')
+const { User } = require('../models/user');
 //let { isAuthed } = require('./authChecker')
 // Add new movie
 router.post('/', async (req, res) => {
@@ -20,60 +22,6 @@ router.post('/', async (req, res) => {
     }
 })
 //gets a movie by id
-router.get('/:id', async (req, res) => {
-    console.log(req.params.id)
-    let id = req.params.id
-    if (!isAuthed(req.headers.authorization.split(' ')[1], res)) {
-        res.status(400).json({ "message": "user not authenticated" })
-        res.end()
-    }
-    else {
-        try {
-            console.log(id);
-
-            // Execute all queries in parallel
-            const [movie, reviews, ratings] = await Promise.all([
-                RatedMovie.findById(id).exec(),
-                Review.find({movieId:id }).exec(),
-                Rating.aggregate([
-                    { $match: { movieId: id } },
-                    { $group: { _id: null, avgRating: { $avg: "$rating" } } },
-                ]).exec(),
-            ]);
-            //let avgScore = 0;
-            // let ratings = await Rating.find({movieId:id}).exec()
-            // let sum = 0;
-            // ratings.forEach(element => {
-            //     sum += element.rating;
-            // });
-           // avgScore = sum/ratings.length
-            // Extract the average rating from the aggregation result
-            const avgScore = ratings.length > 0 ? ratings[0].avgRating : 0;
-
-            // Send the response as a streaming response
-            res.setHeader('Content-Type', 'application/json');
-            res.write('{"movie":');
-            res.write(JSON.stringify(movie));
-            res.write(',"rating":');
-            res.write(JSON.stringify(avgScore));
-            res.write(',"reviews":[');
-            let isFirstReview = true;
-            for await (const review of reviews) {
-                if (!isFirstReview) {
-                    res.write(',');
-                }
-                res.write(JSON.stringify(review));
-                isFirstReview = false;
-            }
-            res.write(']}');
-            res.end();
-
-            console.log("Done");
-        } catch {
-            res.status(400).json("oops something went wrong");
-        }
-    }
-});
 
 
 
@@ -114,6 +62,30 @@ router.post('/rate', async (req, res) => {
     }
 })
 
+router.get('/recommend', async (req, res) => {
+    const token = req.headers.authorization.split(' ')[1]; 
+    if (!isAuthed(token, res)) {
+        res.status(400).json({ "message": "user not authenticated" })
+        res.end()
+    } else {
+        console.log("Hello")
+        const userId = req.params.userId;
+        let user =  await User.findById(userId);
+
+        // if (!user) {
+        //     res.status(404).json({ message: 'User not found' });
+        //     res.end()
+        // }
+        const decodedToken = jwt.verify(token,process.env.AUTH_SECRET );
+        user = decodedToken.user
+        res.status(200).json({ watchlist: user.watchlist })
+    }
+    res.end()
+    //res.status(200).json({"Msg":"this works"})
+
+
+})
+
 router.post('/review', async (req, res) => {
     if (!isAuthed(req.headers.authorization.split(' ')[1], res)) {
         res.status(400).json({ "message": "user not authenticated" })
@@ -143,28 +115,83 @@ router.post('/review', async (req, res) => {
     }
 
 })
-
-async function addMovie(id, res, req) {
-    let movie = new RatedMovie(req.body)
-    try {
-        await movie.save();
-        res.json(movie);
-        console.log("Done");
-    } catch {
-        res.status(400).json("oops something went wrong");
+router.get('/:id', async (req, res) => {
+    console.log(req.params.id)
+    let id = req.params.id
+    if (!isAuthed(req.headers.authorization.split(' ')[1], res)) {
+        res.status(400).json({ "message": "user not authenticated" })
+        res.end()
     }
-}
+    else {
+        try {
+            console.log(id);
+
+            // Execute all queries in parallel
+            const [movie, reviews, ratings] = await Promise.all([
+                RatedMovie.findById(id).exec(),
+                Review.find({ movieId: id }).exec(),
+                Rating.aggregate([
+                    { $match: { movieId: id } },
+                    { $group: { _id: null, avgRating: { $avg: "$rating" } } },
+                ]).exec(),
+            ]);
+            //let avgScore = 0;
+            // let ratings = await Rating.find({movieId:id}).exec()
+            // let sum = 0;
+            // ratings.forEach(element => {
+            //     sum += element.rating;
+            // });
+            // avgScore = sum/ratings.length
+            // Extract the average rating from the aggregation result
+            const avgScore = ratings.length > 0 ? ratings[0].avgRating : 0;
+
+            // Send the response as a streaming response
+            res.setHeader('Content-Type', 'application/json');
+            res.write('{"movie":');
+            res.write(JSON.stringify(movie));
+            res.write(',"rating":');
+            res.write(JSON.stringify(avgScore));
+            res.write(',"reviews":[');
+            let isFirstReview = true;
+            for await (const review of reviews) {
+                if (!isFirstReview) {
+                    res.write(',');
+                }
+                res.write(JSON.stringify(review));
+                isFirstReview = false;
+            }
+            res.write(']}');
+            res.end();
+
+            console.log("Done");
+        } catch {
+            res.status(400).json("oops something went wrong");
+        }
+    }
+});
+
+// async function addMovie(id, res, req) {
+//     let movie = new RatedMovie(req.body)
+//     try {
+//         await movie.save();
+//         res.json(movie);
+//         console.log("Done");
+//     } catch {
+//         res.status(400).json("oops something went wrong");
+//     }
+// }
 
 
-require('dotenv').config() // Load variables from a .env file
-let express = require('express')
+
+//require('dotenv').config() // Load variables from a .env file
+//let express = require('express')
 
 let jwt = require('jsonwebtoken')
 
 function isAuthed(req, res) {
- 
+
     const token = req;
-    console.log(req)
+    //console.log(req)
     //Authorization: 'Bearer TOKEN'
     if (!token) {
         return false

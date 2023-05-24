@@ -6,5 +6,5 @@ router.use('/admin', require('./admin'))
 
 router.use('/auth',	require('./auth'))
 router.use('/movies', require('./movies'))
-router.use('/movies', require('./watchlaterlist'))
+router.use('/watchlist', require('./watchlaterlist'))
 module.exports=router

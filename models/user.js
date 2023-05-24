@@ -41,7 +41,10 @@ let schema = new mongoose.Schema({
 		type: Date,
 		required: true,
 		default: new Date()
-	}
+	},
+	watchlist:{
+		type: Array
+	},
 });
 
 

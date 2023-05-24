@@ -21,7 +21,7 @@ app.use(express.json({ extended: true }))
 app.use('/api', require('./api'))
 
 // THis is a test of accessing components only when logged in
-app.get('/accessResource', (req, res)=>{  
+app.get('/getuser', (req, res)=>{  
     const token = req.headers.authorization.split(' ')[1]; 
     //Authorization: 'Bearer TOKEN'
     if(!token)

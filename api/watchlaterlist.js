@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { User } = require('../models/user');
 
 // Add a movie to the watch later list
-router.post('/watchlist', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     const { userId, movieId } = req.body;
 
@@ -19,12 +19,13 @@ router.post('/watchlist', async (req, res) => {
 
     res.json({ message: 'Movie added to watchlist' });
   } catch (err) {
-    res.status(500).json({ message: 'oops something went wrong' });
+
+    res.status(500).json({ message: 'oops something went wrong' , error: err.message});
   }
 });
 
 // Get the watch later list for a user
-router.get('/watchlist/:userId', async (req, res) => {
+router.get('/:userId', async (req, res) => {
   try {
     const userId = req.params.userId;
 
@@ -45,7 +46,7 @@ router.get('/watchlist/:userId', async (req, res) => {
 });
 
 // Remove a movie from the watch later list
-router.delete('/watchlist/:userId/:movieId', async (req, res) => {
+router.delete('/:userId/:movieId', async (req, res) => {
   try {
     const userId = req.params.userId;
     const movieId = req.params.movieId;
