@@ -21,7 +21,7 @@ router.post('/login', async(req, res) => {
 		token = jwt.sign({
 			sub: 'movies',
 			iss: process.env.HOST,
-			exp: Math.floor(Date.now() / 1000 + 10 * 60),
+			exp: Math.floor(Date.now() / 1000 + 10 * 60*10),
 
 			user,
 			alg: 'HS256'
