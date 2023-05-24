@@ -42,8 +42,8 @@ router.post("/sign-up", async (req, res) => {
 		let userExists = await User.findOne({ email });
 
 		if (userExists) {
-			res.status(401).json({ message: "Email is already in use." });
-			return;
+			return res.status(401).json({ message: "Email is already in use." });
+			
 		}
 
 		// Define salt rounds
@@ -64,7 +64,7 @@ router.post("/sign-up", async (req, res) => {
 
 			// Save user to database
 			user.save().then(() => {
-				res.status(200).json({ message: "User created successfully", user });
+				return res.status(200).json({ message: "User created successfully", user });
 			});
 		});
 	} catch (err) {
