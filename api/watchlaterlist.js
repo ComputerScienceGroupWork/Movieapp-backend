@@ -4,7 +4,7 @@ const { User } = require('../models/user');
 // Add a movie to the watch later list
 router.post('/', async (req, res) => {
   try {
-    const { userId, movieId } = req.body;
+    const { userId, movieId, movieName } = req.body;
 
     // Find the user by userId
     const user = await User.findById(userId);
@@ -14,7 +14,7 @@ router.post('/', async (req, res) => {
     }
 
     // Add the movieId to the user's watch later list
-    user.watchlist.push(movieId);
+    user.watchlist.push({movieId:movieId, movieName:movieName});
     await user.save();
 
     res.json({ message: 'Movie added to watchlist' });
