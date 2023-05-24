@@ -64,7 +64,7 @@ router.post("/sign-up", async (req, res) => {
 
 			// Save user to database
 			user.save().then(() => {
-				res.json({ message: "User created successfully", user });
+				res.status(200).json({ message: "User created successfully", user });
 			});
 		});
 	} catch (err) {
