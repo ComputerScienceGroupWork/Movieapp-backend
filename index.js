@@ -18,7 +18,7 @@ mongoose.connection.on('connected', _ => {
 
 app.use(express.json({ extended: true }))
 app.use(cors({
-    origin: 'http://localhost:3000'
+    origin: ['http://localhost:3000', 'https://ricosavvy-fluffy-space-goldfish-r9vwvq4x947hwwq4-3000.preview.app.github.dev']
   }));
 app.use('/api', require('./api'))
 
