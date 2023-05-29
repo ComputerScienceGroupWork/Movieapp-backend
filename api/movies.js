@@ -13,7 +13,7 @@ router.post('/', async (req, res) => {
         //res.end()
     }
 
-	let c = RatedMovie.findOne({movie:req.body.movie})
+	let c = await RatedMovie.findOne({movie:req.body.movie})
 	//if(error){console.log(error)}
 	if (c) {
 	console.log("found something");
