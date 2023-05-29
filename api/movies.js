@@ -13,12 +13,12 @@ router.post('/', async (req, res) => {
         //res.end()
     }
 
-	RatedMovie.findOne({movie:req.body.movie},(error,document) =>{
-		if(error){console.log(error)}
-		else if (document) {
-			console.log("found something");
-			return res.status(200).json(document)}
-	});
+	let c = RatedMovie.findOne({movie:req.body.movie})
+	//if(error){console.log(error)}
+	if (c) {
+	console.log("found something");
+	return res.status(200).json(c)}
+	
 	//if (!RatedMovie.exists(req.body)) {
 
 		console.log(req.body)
