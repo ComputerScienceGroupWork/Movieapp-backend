@@ -56,7 +56,7 @@ router.post('/rate', async (req, res) => {
         return res.status(400).json({ "message": "user not authenticated" })
        // res.end()
     } else {
-        if (!RatedMovie.exists({ movie: req.body.movieId})) {
+        /*if (!RatedMovie.exists({ movie: req.body.movieId})) {
             let movie = new RatedMovie({movie: req.body.movieId})
             try {
                 movie.save();
@@ -65,7 +65,7 @@ router.post('/rate', async (req, res) => {
             } catch {
                 return res.status(400).json("oops something went wrong");
             }
-        }
+        }*/
         console.log(req.body)
         let rating = new Rating(req.body)
         try {
@@ -109,7 +109,7 @@ router.post('/review', async (req, res) => {
         return res.status(400).json({ "message": "user not authenticated" })
       //  res.end()
     } else {
-        if (!RatedMovie.exists({ movie: req.body.movieId })) {
+        /*if (!RatedMovie.exists({ movie: req.body.movieId })) {
             let movie = new RatedMovie({movie: req.body.movieId})
             try {
                 await movie.save();
@@ -118,7 +118,7 @@ router.post('/review', async (req, res) => {
             } catch {
                 return res.status(400).json("oops something went wrong");
             }
-        }
+        }*/
 
         console.log(req.body)
         let review = new Review(req.body)
@@ -145,8 +145,8 @@ router.get('/:id', async (req, res) => {
             console.log(id);
 
             // Execute all queries in parallel
-            const [movie, reviews, ratings] = await Promise.all([
-                RatedMovie.findById(id).exec(),
+            const [/*movie,*/ reviews, ratings] = await Promise.all([
+                //RatedMovie.findOne({movie: }).exec(),
                 Review.find({ movieId: id }).exec(),
                 Rating.aggregate([
                     { $match: { movieId: id } },
@@ -165,9 +165,9 @@ router.get('/:id', async (req, res) => {
 
             // Send the response as a streaming response
             res.setHeader('Content-Type', 'application/json');
-            res.write('{"movie":');
-            res.write(JSON.stringify(movie));
-            res.write(',"rating":');
+            /*res.write('"movie":');
+            res.write(JSON.stringify(movie));*/
+            res.write('{"rating":');
             res.write(JSON.stringify(avgScore));
             res.write(',"reviews":[');
             let isFirstReview = true;
