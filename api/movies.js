@@ -24,6 +24,7 @@ router.post('/', async (req, res) => {
 			return res.status(400).json("oops something went wrong");
 		}
 	 }
+	//please work
 	let movie =  RatedMovie.findOne(req.body).exec(),
 	res.status(200).json(movie)
 })
