@@ -164,24 +164,26 @@ router.get('/:id', async (req, res) => {
             const avgScore = ratings.length > 0 ? ratings[0].avgRating : 0;
 
             // Send the response as a streaming response
-            res.setHeader('Content-Type', 'application/json');
-            /*res.write('"movie":');
-            res.write(JSON.stringify(movie));*/
-            res.write('{"rating":');
-            res.write(JSON.stringify(avgScore));
-            res.write(',"reviews":[');
-            let isFirstReview = true;
-            for await (const review of reviews) {
-                if (!isFirstReview) {
-                    res.write(',');
-                }
-                res.write(JSON.stringify(review));
-                isFirstReview = false;
-            }
-            res.write(']}');
-            res.end();
-
+            // res.setHeader('Content-Type', 'application/json');
+            // /*res.write('"movie":');
+            // res.write(JSON.stringify(movie));*/
+            // res.write('{"rating":');
+            // res.write(JSON.stringify(avgScore));
+            // res.write(',"reviews":[');
+            // let isFirstReview = true;
+            // for await (const review of reviews) {
+            //     if (!isFirstReview) {
+            //         res.write(',');
+            //     }
+            //     res.write(JSON.stringify(review));
+            //     isFirstReview = false;
+            // }
+            // res.write(']}');
+            // res.end();
+            
             console.log("Done");
+
+            return res.status(200).json({ratings:avgScore,reviews:reviews})
         } catch {
             return  res.status(400).json("oops something went wrong");
         }
