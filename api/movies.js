@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 	//if(error){console.log(error)}
 	if (c) {
 	console.log("found something");
-	console.log(c);
+	//console.log(c);
 	return res.status(200).json(c)}
 	
 	//if (!RatedMovie.exists(req.body)) {
