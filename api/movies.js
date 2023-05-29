@@ -12,15 +12,20 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ "message": "user not authenticated" })
         //res.end()
     }
-    console.log(req.body)
-    let movie = new RatedMovie(req.body)
-    try {
-        await movie.save();
-        console.log("Done");
-        return res.json(movie);
-    } catch {
-        return res.status(400).json("oops something went wrong");
-    }
+	if (!RatedMovie.exists({ movie: req.body})) {
+
+		console.log(req.body)
+		let movie = new RatedMovie(req.body)
+		try {
+			await movie.save();
+			console.log("Done");
+			return res.json(movie);
+		} catch {
+			return res.status(400).json("oops something went wrong");
+		}
+	 }
+	let movie =  RatedMovie.findOne(req.body).exec(),
+	return res.json(movie)
 })
 //gets a movie by id
 
