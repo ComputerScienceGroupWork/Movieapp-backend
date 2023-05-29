@@ -25,7 +25,7 @@ router.post('/', async (req, res) => {
 		}
 	 }
 	let movie =  RatedMovie.findOne(req.body).exec(),
-	return res.json(movie)
+	return res.status(200).json(movie)
 })
 //gets a movie by id
 
