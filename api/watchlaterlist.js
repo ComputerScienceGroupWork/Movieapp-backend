@@ -2,7 +2,7 @@ const router = require('express').Router();
 const { User } = require('../models/user');
 
 // Add a movie to the watch later list
-router.post('/', async (req, res) => {
+router.post('/add', async (req, res) => {
   try {
     const { userId, movieId, movieName } = req.body;
 

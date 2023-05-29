@@ -4,6 +4,7 @@ let { RatedMovie } = require('../models/ratedMovies')
 let { Rating } = require('../models/rating')
 let { Review } = require('../models/review')
 const { User } = require('../models/user');
+const http = require('http')
 //let { isAuthed } = require('./authChecker')
 // Add new movie
 router.post('/', async (req, res) => {
@@ -68,18 +69,20 @@ router.get('/recommend', async (req, res) => {
         return res.status(400).json({ "message": "user not authenticated" })
         //res.end()
     } else {
-        console.log("Hello")
-        const userId = req.params.userId;
-        let user =  await User.findById(userId);
-
-        // if (!user) {
+		// if (!user) {
         //     res.status(404).json({ message: 'User not found' });
         //     res.end()
         // }
         const decodedToken = jwt.verify(token,process.env.AUTH_SECRET );
-        user = decodedToken.user
-        return res.status(200).json({ watchlist: user.watchlist })
-    }
+        userWatchlist = decodedToken.user.watchlist
+        
+		for(let i = 0; i < userWatchlist.length && i < 5;i++)
+		{
+			console.log(userWatchlist[i]);
+		}
+		return res.status(200).json({ watchlist: userWatchlist })
+
+	}
     //res.end()
     //res.status(200).json({"Msg":"this works"})
 
