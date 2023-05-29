@@ -12,6 +12,11 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ "message": "user not authenticated" })
         //res.end()
     }
+
+	RatedMovie.findOne({movie:req.body.movie},(error,document) =>{
+		if(error){console.log(error)}
+		else if (document) {return res.status(200).json(document)}
+	});
 	//if (!RatedMovie.exists(req.body)) {
 
 		console.log(req.body)
