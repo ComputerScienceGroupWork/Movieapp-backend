@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ "message": "user not authenticated" })
         //res.end()
     }
-	if (!RatedMovie.exists(req.body)) {
+	//if (!RatedMovie.exists(req.body)) {
 
 		console.log(req.body)
 		let movie = new RatedMovie(req.body)
@@ -23,10 +23,11 @@ router.post('/', async (req, res) => {
 		} catch {
 			return res.status(400).json("oops something went wrong");
 		}
-	 }
+	/* }
 	//please work
+	console.log("Movie already added")
 	let movie =  RatedMovie.findOne(req.body).exec()
-	return res.status(200).json(movie)
+	return res.status(200).json(movie)*/
 })
 //gets a movie by id
 
