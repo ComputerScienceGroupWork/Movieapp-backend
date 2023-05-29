@@ -12,14 +12,14 @@ router.post('/add', async (req, res) => {
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-
+	console.log("Adding movie to watchlist")
     // Add the movieId to the user's watch later list
     user.watchlist.push({movieId:movieId, movieName:movieName});
     await user.save();
 
     return res.json({ message: 'Movie added to watchlist' });
   } catch (err) {
-
+	console.log(err.message);
     return res.status(500).json({ message: 'oops something went wrong' , error: err.message});
   }
 });
