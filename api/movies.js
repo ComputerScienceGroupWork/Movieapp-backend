@@ -183,7 +183,7 @@ router.get('/:id', async (req, res) => {
             
             console.log("Done");
 
-            return res.status(200).json({ratings:avgScore,reviews:reviews})
+            return res.status(200).json({rating:avgScore,reviews:reviews})
         } catch {
             return  res.status(400).json("oops something went wrong");
         }
