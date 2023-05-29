@@ -44,7 +44,7 @@ router.post('/rate', async (req, res) => {
         if (!RatedMovie.exists({ movie: req.body.movieId })) {
             let movie = new RatedMovie(req.body)
             try {
-                await movie.save();
+                movie.save();
                 console.log("Movie did not exist so was added");
                 return  res.json(movie);
             } catch {
