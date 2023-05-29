@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
         return res.status(400).json({ "message": "user not authenticated" })
         //res.end()
     }
-	if (!RatedMovie.exists({ movie: req.body})) {
+	if (!RatedMovie.exists(req.body)) {
 
 		console.log(req.body)
 		let movie = new RatedMovie(req.body)
