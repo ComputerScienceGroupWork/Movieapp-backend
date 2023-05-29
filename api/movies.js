@@ -41,8 +41,8 @@ router.post('/rate', async (req, res) => {
         return res.status(400).json({ "message": "user not authenticated" })
        // res.end()
     } else {
-        if (!RatedMovie.exists({ movie: req.body.movieId })) {
-            let movie = new RatedMovie(req.body)
+        if (!RatedMovie.exists({ movie: req.body.movieId})) {
+            let movie = new RatedMovie({movie: req.body.movieId})
             try {
                 movie.save();
                 console.log("Movie did not exist so was added");
@@ -95,7 +95,7 @@ router.post('/review', async (req, res) => {
       //  res.end()
     } else {
         if (!RatedMovie.exists({ movie: req.body.movieId })) {
-            let movie = new RatedMovie(req.body)
+            let movie = new RatedMovie({movie: req.body.movieId})
             try {
                 await movie.save();
                 console.log("Movie did not exist so was added");
