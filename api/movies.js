@@ -157,7 +157,7 @@ router.get('/:id', async (req, res) => {
                 //     { $group: { _id: null, avgRating: { $avg: "$rating" } } },
                 // ]).exec(),
             // ]);
-            ratings = Rating.aggregate([
+            ratings =await Rating.aggregate([
                 { $match: { movieId: id } },
                 { $group: { _id: null, avgRating: { $avg: "$rating" } } },
             ]).exec();
@@ -169,11 +169,12 @@ router.get('/:id', async (req, res) => {
             // });
             // avgScore = sum/ratings.length
             // Extract the average rating from the aggregation result
+    
             const avgScore = ratings.length > 0 ? ratings[0].avgRating : 0;
 
             console.log("Done");
 
-            return res.status(200).json({rating:avgScore,reviews: Review.find({ movieId: id }).exec()})
+            return res.status(200).json({rating:avgScore,reviews: await Review.find({ movieId: id }).exec()})
         } catch {
             return  res.status(400).json("oops something went wrong");
         }
