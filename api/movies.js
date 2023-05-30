@@ -133,6 +133,10 @@ router.post('/review', async (req, res) => {
     }
 
 })
+// router.get('/:id/reviews', async(req, req) =>
+// {
+
+// })
 router.get('/:id', async (req, res) => {
     console.log(req.params.id)
     let id = req.params.id
@@ -145,14 +149,18 @@ router.get('/:id', async (req, res) => {
             console.log(id);
 
             // Execute all queries in parallel
-            const [/*movie,*/ reviews, ratings] = await Promise.all([
-                //RatedMovie.findOne({movie: }).exec(),
-                Review.find({ movieId: id }).exec(),
-                Rating.aggregate([
-                    { $match: { movieId: id } },
-                    { $group: { _id: null, avgRating: { $avg: "$rating" } } },
-                ]).exec(),
-            ]);
+            // const [/*movie,*/ reviews, ratings] = await Promise.all([
+            //     //RatedMovie.findOne({movie: }).exec(),
+            //     Review.find({ movieId: id }).exec(),
+                // Rating.aggregate([
+                //     { $match: { movieId: id } },
+                //     { $group: { _id: null, avgRating: { $avg: "$rating" } } },
+                // ]).exec(),
+            // ]);
+            ratings = Rating.aggregate([
+                { $match: { movieId: id } },
+                { $group: { _id: null, avgRating: { $avg: "$rating" } } },
+            ]).exec();
             //let avgScore = 0;
             // let ratings = await Rating.find({movieId:id}).exec()
             // let sum = 0;
@@ -163,27 +171,9 @@ router.get('/:id', async (req, res) => {
             // Extract the average rating from the aggregation result
             const avgScore = ratings.length > 0 ? ratings[0].avgRating : 0;
 
-            // Send the response as a streaming response
-            // res.setHeader('Content-Type', 'application/json');
-            // /*res.write('"movie":');
-            // res.write(JSON.stringify(movie));*/
-            // res.write('{"rating":');
-            // res.write(JSON.stringify(avgScore));
-            // res.write(',"reviews":[');
-            // let isFirstReview = true;
-            // for await (const review of reviews) {
-            //     if (!isFirstReview) {
-            //         res.write(',');
-            //     }
-            //     res.write(JSON.stringify(review));
-            //     isFirstReview = false;
-            // }
-            // res.write(']}');
-            // res.end();
-            
             console.log("Done");
 
-            return res.status(200).json({rating:avgScore,reviews:reviews})
+            return res.status(200).json({rating:avgScore,reviews: Review.find({ movieId: id }).exec()})
         } catch {
             return  res.status(400).json("oops something went wrong");
         }
